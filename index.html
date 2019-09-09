@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+    <style>
+        
+        *{
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+        @font-face {
+            font-family: "iconfont";
+            src: url("./font/iconfont.eot?t=1568030107523"); /* IE9 */
+            src: url("./font/iconfont.eot?t=1568030107523#iefix") format("embedded-opentype"), /* IE6-IE8 */
+            url("./font/data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAKEAAsAAAAABjQAAAI6AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCCcAo4UQE2AiQDCAsGAAQgBYRtBzUbfAUR1Ystsr8dN05RfnhO9h4KUIKqfBJ9n+H3fS6WLLGxWjRkEsNMWs/j4b/9/rfPnbnvzzdNrkgXsSQioWuCRolUGpHE6ngSDfn1BE+lsARk/q+FoSRdre8mQs1Pm3PlJ2tUhBrJnd979IUUh2me6mGzNWAwv+XXomYAZC+njE/cT/0JNJB8QHPsoqikpADajQc00KigkW1CM94wdsELPE6gzahlsXM+eFKR2eMCcSddv6gUfLLMkkVoNCzN4qVaqZ5XAS+i78df2BiFSp3YZUev7bpi6w9OWtJ0JiD4CWh1jYRlZOJkY+ywJBgnaYtlkxyrOPiheWAVRzUJ9tfZhR1gGMaDH7yxAlTwWOKBrT2TriE67pdXz/Zo8GYNHb9Xvx0Hwlb0s/S9eSMQrLwjvMjgw+dGxkx3UFa2Bz9BMrApGzLbUmVN0thZ6dh5RZs2NLGrz9ep+sEzpkIxOMHRYiRDUkyTmV1Grd1mNBRb0GbJntXt+j2SRG7FoscAocdrVLq8RdLjPZnZL6gN+Y+GnkhoczrYst1skEll0kIOzR+T3Tfv2kTFxTcK70VzXhZxX8Q1BXFo+3LyShvxEjPqJ4wiHj3vK87gNFqWHQ/eM1lpo8gxdZ1velNr9xUUZNJCDs0fk903H3QXVfn8jcJ70dzRUBd9EdfUPw5tP4C8qrdBDY/ySv2EUcSj533FGQyiZdnxaB6UyUobJ0SOqXPa+aHqdnvt+nd7AFBgG5qLMzdR9ZaT3n9pCwA=") format("woff2"),
+            url("./font/iconfont.woff?t=1568030107523") format("woff"),
+            url("./font/iconfont.ttf?t=1568030107523") format("truetype"), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+            url("./font/iconfont.svg?t=1568030107523#iconfont") format("svg"); /* iOS 4.1- */
+        }
+        .tree-li{
+            font-size: 14px;
+            margin-left: 30px;
+            cursor: pointer;
+        }
+        .scope::before{
+            display: inline-block;
+            content: '\e6bd';
+            font-family: 'iconfont';
+        }
+        .active::before{
+            transform: rotateZ(-90deg);
+        }
+    
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <tree :data="treeData"></tree>
+    </div>
+    <script>
+        
+        // 树形组件
+
+
+
+        // 当你首次进入这个界面的时候 它会给我们展示的是一级的内容 点击一级就展开二级 点击二级就展示下一级的内容
+        // 如果有子集的话下面会有个小箭头 如果没有子集的话就没有小箭头 这是一个细节
+        // 当点击展开全部子集的时候 当再次点击合上然后再次点击展开 还是一次性展开全部子集在我们页面上
+
+
+        const treeData = [
+            {
+                name: '一级 1',
+                children: [
+                    {
+                        name: '二级 1-1',
+                        children: [
+                            {
+                                name: '三级 1-1-1',
+                                children: [
+                                    {
+                                        name: '四级 1-1-1-1'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                    
+                ]
+            },
+            {
+                name: '一级 2',
+                children: [
+                    {
+                        name: '二级 2-2',
+                        children: [
+                            {
+                                name: '三级 2-2-2',
+                                children: [
+                                    {
+                                        name: '四级 2-2-2-2'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                    
+                ]
+            },
+            {
+                name: '一级 3',
+                children: [
+                    {
+                        name: '二级 3-3',
+                        children: [
+                            {
+                                name: '三级3-3-3',
+                                children: [
+                                    {
+                                        name: '四级 3-3-3-3'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                    
+                ]
+            }
+        ];
+        Vue.component('tree', {
+            props: ['data'],
+            template: `<ul>
+                         <li v-for = "(item, index) in data"
+                             class = "tree-li"
+                             :class = "{
+                                 'scope': item.children,
+                                 'active': showChildren[index]
+                             }">
+                             <span  @click = "handleClick(index)">{{item.name}}</span>
+                             <tree :data = "item.children"
+                                    v-show = "showChildren[index]"
+                                    v-if = "alreadyShow[index]"></tree>
+                         </li>    
+                        </ul>`,
+            data() {
+                return {
+                    showChildren: [], // 存储是否已经展开
+                    alreadyShow: []
+                }
+            },
+            methods: {
+                handleClick(index) {
+                    console.log(index);
+
+                    const show = !this.showChildren[index];
+                    // this.showChildren.splice(index, 1, show); // 改变数组内的值触发视图的改变
+                    this.$set(this.showChildren, index, show);   
+                    // this.alreadyShow.splice(index, 1, true);
+                    this.$set(this.alreadyShow, index, true);
+
+                    console.log(this.showChildren, this.alreadyShow);
+                }
+            }            
+        })
+        new Vue({
+            el: "#app",
+            data: {
+                treeData,
+            }
+        })
+        
+
+
+
+        // 怎么去有没有子集呢  利用数据来判断
+        // 把ul和li写成是一个组件 我们在这把它替换成组件 在我们页面当中只展示为一个组件    
+        // 它把所有的读展示出来 这不是我们想要的 我们想要的是第一次进入到这个界面的时候我们展示的只是一级的内容 
+        //     我们判断是不是要去展示这个内容 怎么判断 我们最好写一个数组 数组里面放的是我们要不要他们的展示的数据 如果这个数据为true的话 我们就去展示
+        //     如果为false的话我们就不去展示 判断showChildren里面对于的索引是不是为true 如果为true的话你们就去展示 如果为false你就不展示  
+        //     点击的时候我们就去切换我们showChildren里面对应索引的值 我们改变的是数组的某一项 不是数组的引用 我们想改变数组并且渲染到页面上 
+        //     可以采用$set这个方法 二是用一些数组定义方法
+        // v-if会完全移除和重新渲染 添加和移除会重新造成我们这个组件的重新渲染 重新渲染是不是会重新走里面的data data是它空的初始值 自然是不会去展示他们下面的内容
+        //     如果想重新渲染它下面的内容的话 最好不要让它重新渲染下面的组件 用v-show
+        // 我们要求我们首屏渲染时间是最少最短的 如果说里面是隐藏的是一些图片或者视频 在用户没有去点开的情况下 它就把这些资源加载进来了 
+        //     对我们用户体验是不是不太好 第一次进入到这个界面是优点卡顿的 我们用其他的值控制是不是要去渲染 再写一个数组 如果你是之前显示过它的话 它就去给我们展示 
+        //     如果你之前不去显示它的话就不渲染
+        // 还有一个细节需要你去处理 小箭头的方向 有箭头的话需要让箭头去旋转一下
+
+
+
+
+        // vue如何修改数组中对象的值 在vue中是无法检测到根据索引值修改的数据变动的
+        // 1. 可以用this.$set(target, key, value) // 第一个参数是要修改的数据 第二个值是修改当前数组的哪一个字段 第三个是要修改为什么值    
+        // 2. 也可以通过数组定义的方法来修改 
+
+
+
+        // 公用一个数组？？？
+
+
+        // v-if v-show
+
+
+    
+    
+    </script>
+    
+</body>
+</html>
